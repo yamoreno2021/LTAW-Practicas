@@ -1,7 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 
-const PORT = 8009;
+const PORT = 8001;
 const ROOT_DIR = __dirname + '/paginas/';
 
 const server = http.createServer((req, res) => {
