@@ -48,6 +48,12 @@ header {
     border-radius: 10px;
 }
 
+.error-img {
+    width: 70%; /* Reduce el tamaño de la imagen de error */
+    max-width: 500px; /* Tamaño máximo para evitar que crezca demasiado */
+    height: auto;
+}
+
 .btn {
     display: inline-block;
     background: #e60012;
@@ -61,6 +67,18 @@ header {
     animation: fadeIn 1.2s ease-in-out;
 }
 
+.error-btn {
+    display: inline-block;
+    background: white;
+    color: #e60012;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: background 0.3s ease, transform 0.2s ease;
+    animation: fadeIn 1.2s ease-in-out;
+}
 .btn:hover {
     background: #b5000f;
     transform: scale(1.1);
@@ -72,10 +90,23 @@ footer {
     padding: 10px;
     font-size: 14px;
     font-weight: bold;
-    position: absolute;
+    text-align: center;
     width: 100%;
+    position: fixed;
     bottom: 0;
-}
+    left: 0;
+} 
+/* footer {
+    background-color: white;
+    color: #e60012;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    position: relative;
+    margin-top: auto;
+}  */
 
 /* Animaciones */
 @keyframes fadeIn {
