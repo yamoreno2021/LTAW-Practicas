@@ -60,7 +60,7 @@ header {
     color: white;
     padding: 10px 15px;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 30px;
     font-weight: bold;
     margin-top: 10px;
     transition: background 0.3s ease, transform 0.2s ease;
@@ -69,17 +69,26 @@ header {
 
 .error-btn {
     display: inline-block;
-    background: white;
-    color: #e60012;
+    /* background: white; */
+    background: #e60012;
+    /* color: #e60012; */
+    color: white;
+    border-color:white;
     padding: 10px 15px;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 30px;
+    border: 2px solid white; /* Grosor del borde y color blanco */
     font-weight: bold;
     margin-top: 10px;
     transition: background 0.3s ease, transform 0.2s ease;
     animation: fadeIn 1.2s ease-in-out;
 }
 .btn:hover {
+    background: #b5000f;
+    transform: scale(1.1);
+}
+
+.error-btn:hover {
     background: #b5000f;
     transform: scale(1.1);
 }
