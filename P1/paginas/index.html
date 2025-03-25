@@ -5,42 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi Tienda</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="/img/Mario.ico" type="image/x-icon">
 </head>
 <body> 
     <header>
         <h1>Nindendo</h1>
+        <input type="text" id="searchInput" placeholder="Buscar producto...">
     </header>
     <main>
         <div class="productos">
-            <div class="producto">
-                <img src="img/Mario2.jpg" alt="Producto 1">
+            <div class="producto" data-name="Mariano Odiseas">
+                <img src="img/Mario2.jpg" alt="Mariano Odiseas">
                 <h2>Mariano Odiseas</h2>
                 <p>Aventura en 3D con Mariano y Cappy.</p>
+                <div class="descripcion">Explora el Reino Champiñón con nuevos poderes y transforma a Mario con las frutas Wonder.</div>
                 <a href="producto1.html" class="btn">Ver más</a>
             </div>
-            <div class="producto">
-                <img src="img/Zelda.webp" alt="Producto 2">
+            <div class="producto" data-name="Link Aliento Salvaje">
+                <img src="img/Zelda.webp" alt="Link Aliento Salvaje">
                 <h2>Link Aliento Salvaje</h2>
                 <p>Explora el vasto mundo de Hyrule.</p>
                 <a href="producto2.html" class="btn">Ver más</a>
             </div>
-            <div class="producto">
-                <img src="img/Xenoblade.jpg" alt="Producto 3">
+            <div class="producto" data-name="Cronicas de la Espada Xeno 3">
+                <img src="img/Xenoblade.jpg" alt="Cronicas de la Espada Xeno 3">
                 <h2>Cronicas de la Espada Xeno 3</h2>
                 <a href="producto3.html" class="btn">Ver más</a>
             </div>
-            <div class="producto">
-                <img src="img/Smash.jpg" alt="Producto 4">
+            <div class="producto" data-name="Super Hostias Ultimate">
+                <img src="img/Smash.jpg" alt="Super Hostias Ultimate">
                 <h2>Super Hostias Ultimate</h2>
                 <a href="producto4.html" class="btn">Ver más</a>
             </div>
-            <div class="producto">
-                <img src="img/Tenis.jpg" alt="Producto 5">
+            <div class="producto" data-name="Rafa Nadal Aces">
+                <img src="img/Tenis.jpg" alt="Rafa Nadal Aces">
                 <h2>Rafa Nadal Aces</h2>
                 <a href="producto5.html" class="btn">Ver más</a>
             </div>
-            <div class="producto">
-                <img src="img/Wonder.jpg" alt="Producto 6">
+            <div class="producto" data-name="Otro Puto Mario">
+                <img src="img/Wonder.jpg" alt="Otro Puto Mario">
                 <h2>Otro Pu** Mario</h2>
                 <a href="producto6.html" class="btn">Ver más</a>
             </div>
@@ -51,5 +54,6 @@
         <p>Paga de forma segura con</p>
 
     </footer>
+    <script src="scripts.js"></script>
 </body>
 </html>

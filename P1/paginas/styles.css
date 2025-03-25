@@ -19,12 +19,27 @@ header {
     animation: slideDown 0.8s ease-in-out;
 }
 
+#searchInput {
+    width: 300px;
+    padding: 10px;
+    font-size: 16px;
+    border: 3px solid #e60012;
+    border-radius: 20px;
+    outline: none;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
 .productos {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     gap: 20px;
     padding: 20px;
+}
+
+.hidden {
+    display: none;
 }
 
 .producto {
@@ -39,13 +54,38 @@ header {
 }
 
 .producto:hover {
-    transform: scale(1.05);
+
+    transform: scale(1.80);
     box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
 }
+
+/* .producto:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+} */
 
 .producto img {
     width: 100%;
     border-radius: 10px;
+}
+
+.descripcion {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    text-align: left;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    display: none;
+}
+
+.producto:hover .descripcion {
+    transform: translateY(0);
+    display: block;
+  
 }
 
 .error-img {
