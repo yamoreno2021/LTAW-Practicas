@@ -1,7 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 
-const PORT = 8002;
+const PORT = 8003;
 const ROOT_DIR = __dirname + '/paginas/';
 const IMG_DIR = ROOT_DIR +'img';
 
@@ -52,18 +52,6 @@ const server = http.createServer((req, res) => {
     
     let filePath = url.pathname === '/' ? ROOT_DIR + 'index.html' : ROOT_DIR + url.pathname;
     
-    // if (url.pathname === '/ls') {
-    //     fs.readdir(ROOT_DIR, (err, files) => {
-    //         if (err) {
-    //             res.writeHead(500, { 'Content-Type': 'text/html' });
-    //             res.end(fs.readFileSync(ROOT_DIR + 'error.html'));
-    //             return;
-    //         }
-    //         res.writeHead(200, { 'Content-Type': 'text/html' });
-    //         res.end(`<html><body><h1>Lista de archivos</h1><ul>${files.map(file => `<li>${file}</li>`).join('')}</ul></body></html>`);
-    //     });
-    //     return;
-    // }
     if (url.pathname === '/ls') {
         fs.readdir(ROOT_DIR, (err, files) => {
             if (err) {
@@ -74,7 +62,7 @@ const server = http.createServer((req, res) => {
             
             let fileList = files.map(file => {
                 let filePath = ROOT_DIR + file;
-                if (fs.statSync(filePath).isDirectory() && file === 'img') {
+                if (fs.statSync(filePath).isDirectory() && file === 'img' || fs.statSync(filePath).isDirectory() && file === 'icons') {
                     let imgFiles = fs.readdirSync(IMG_DIR).map(img => `<li>img/${img}</li>`).join('');
                     return `<li><strong>${file}/</strong><ul>${imgFiles}</ul></li>`;
                 }
