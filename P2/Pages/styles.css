@@ -1,0 +1,262 @@
+/* styles.css - Inspirado en Nintendo con Animaciones */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #e60012;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    animation: fadeIn 1s ease-in-out;
+    /*  */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+main {
+    flex: 1;
+    padding-bottom: 100px;
+    padding-top: 100px;
+}
+
+header {
+    background-color: white;
+    color: #e60012;
+    padding: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    animation: slideDown 0.8s ease-in-out;
+}
+
+#searchInput {
+    width: 300px;
+    padding: 10px;
+    font-size: 16px;
+    border: 3px solid #e60012;
+    border-radius: 20px;
+    outline: none;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+/* .productos {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px;
+} */
+
+.usuario-box {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+.productos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
+    justify-items: center;
+    align-items: start;
+}
+
+.hidden {
+    display: none;
+}
+
+.producto {
+    background: white;
+    color: black;
+    border-radius: 10px;
+    padding: 15px;
+    width: 250px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: fadeInUp 0.8s ease-in-out;
+}
+
+
+.producto:hover {
+
+    transform: scale(1.80);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+/* .producto:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
+} */
+
+.producto img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.descripcion {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    font-size: 10px;
+    text-align: left;
+    transform: translateY(100%);
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    display: none;
+}
+
+.producto:hover .descripcion {
+    transform: translateY(0);
+    display: block;
+  
+}
+
+.error-img {
+    width: 70%; /* Reduce el tamaño de la imagen de error */
+    max-width: 500px; /* Tamaño máximo para evitar que crezca demasiado */
+    height: auto;
+}
+
+.btn {
+    display: inline-block;
+    background: #e60012;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: background 0.3s ease, transform 0.2s ease;
+    animation: fadeIn 1.2s ease-in-out;
+}
+
+.error-btn {
+    display: inline-block;
+    /* background: white; */
+    background: #e60012;
+    /* color: #e60012; */
+    color: white;
+    border-color:white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 30px;
+    border: 2px solid white; /* Grosor del borde y color blanco */
+    font-weight: bold;
+    margin-top: 10px;
+    transition: background 0.3s ease, transform 0.2s ease;
+    animation: fadeIn 1.2s ease-in-out;
+}
+.btn:hover {
+    background: #b5000f;
+    transform: scale(1.1);
+}
+
+.error-btn:hover {
+    background: #b5000f;
+    transform: scale(1.1);
+}
+
+footer {
+    background-color: white;
+    color: #e60012;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    width: 100%;
+    /* position: fixed; */
+    position: relative;
+    /* bottom: 0; */
+    margin-top: auto;
+    left: 0;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+} 
+
+.footer-left {
+    display: flex;
+    flex: 1;
+    flex-wrap: wrap;
+    max-width: 50%;
+    gap: 15px;
+}
+
+.footer-right {
+    flex: 1;
+    max-width: 50%;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+
+.footer-left a, .footer-right a {
+    color: black;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.footer-right img {
+    height: 48px;
+}
+
+.footer-right a:hover {
+    opacity: 0.7;
+}
+
+.metodos-pago, .redes-sociales {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.metodos-pago img, .redes-sociales img {
+    height: 24px;
+    width: auto;
+}
+
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+    .productos {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .productos {
+        grid-template-columns: repeat(1, 1fr);
+    }
+    footer {
+        flex-direction: column;
+        text-align: center;
+        
+    }
+    .footer-left, .footer-right {
+        justify-content: center;
+        max-width: 100%;
+    }
+}

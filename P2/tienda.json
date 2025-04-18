@@ -1,0 +1,81 @@
+{
+    "usuarios": [
+      {
+        "nombre": "root",
+        "nombreReal": "Administrador",
+        "correo": "root@tienda.com"
+      },
+      {
+        "nombre": "yuriy",
+        "nombreReal": "Yuriy Moreno",
+        "correo": "yuriymosa@gmail.com"
+      }
+    ],
+    "productos": [
+        {
+            "nombre": "Mariano Odiseas",
+            "descripcion": "Mariano descubre nuevos reinos con una gorra poseída.",
+            "precio": 59.99,
+            "stock": 1
+        },
+        {
+            "nombre": "Link Aliento Salvaje",
+            "descripcion": "Link despierta tras 100 años e Hyrule está hecho polvo.",
+            "precio": 54.95,
+            "stock": 2
+        },
+        {
+            "nombre": "Cronicas de la Espada Xeno 3",
+            "descripcion": "Anime intenso con espadas gigantes, drama innecesario y 300 sistemas de combate.",
+            "precio": 54.95,
+            "stock": 3
+        },
+        {
+          "nombre": "Super Hostias Ultimate",
+          "descripcion": "Todos los personajes de Nindendo se pegan.",
+          "precio": 54.95,
+          "stock": 4
+        },
+        {
+          "nombre": "Rafa Nadal Aces",
+          "descripcion": "Tenis con objetos ilegales.",
+          "precio": 54.95,
+          "stock": 5
+        },
+        {
+          "nombre": "Otro Puto Mario",
+          "descripcion": "Otro Mario en 2D. Sí, otro más.",
+          "precio": 54.95,
+          "stock": 6
+        },
+        {
+          "nombre": "Pokemon Españita",
+          "descripcion": "El peor Pokémon que existe. Pero eh, esta basado en España.",
+          "precio": 54.95,
+          "stock": 7
+        },
+        {
+          "nombre": "Los Cazafantasmas",
+          "descripcion": "Luigi tiene que limpiar una mansión llena de fantasmas con una aspiradora.",
+          "precio": 54.95,
+          "stock": 8
+        },
+        {
+          "nombre": "Destructor de Mundos",
+          "descripcion": "Pequeño, adorable, y absolutamente peligroso.",
+          "precio": 54.95,
+          "stock": 9
+        }
+
+    ],
+    "pedidos": [
+      {
+        "usuario": "yuriy",
+        "direccion": "Calle A",
+        "tarjeta": "1234 5678 9012 3456",
+        "productos": ["Mariano Odiseas", "Link Aliento Salvaje"]
+      }
+    ]
+  }
+  
+
