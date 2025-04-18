@@ -193,7 +193,33 @@ const server = http.createServer((req, res) => {
         });
         return;
     }
-
+    
+    if (req.method === 'POST' && url.pathname === '/register') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+          const params = new URLSearchParams(body);
+          const nombre = params.get('nombre');
+          const nombreReal = params.get('nombreReal');
+          const correo = params.get('correo');
+      
+          const tienda = JSON.parse(fs.readFileSync('tienda.json', 'utf8'));
+          const existe = tienda.usuarios.some(u => u.nombre === nombre);
+      
+          if (!existe) {
+            tienda.usuarios.push({ nombre, nombreReal, correo });
+            fs.writeFileSync('tienda.json', JSON.stringify(tienda, null, 2));
+          }
+      
+          res.writeHead(302, {
+            'Set-Cookie': `user=${nombre}; Path=/`,
+            'Location': '/'
+          });
+          res.end();
+        });
+        return;
+      }
+      
     
     fs.readFile(filePath, (err, content) => {
         if (url.pathname === '/' && filePath.endsWith('index.html')) {
