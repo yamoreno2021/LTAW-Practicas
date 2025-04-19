@@ -193,7 +193,7 @@ const server = http.createServer((req, res) => {
         });
         return;
     }
-    
+
     if (req.method === 'POST' && url.pathname === '/register') {
         let body = '';
         req.on('data', chunk => body += chunk);
@@ -232,6 +232,44 @@ const server = http.createServer((req, res) => {
             return;
         }
 
+        if (url.pathname === '/producto.html') {
+            const params = new URLSearchParams(url.search);
+            const nombreProd = params.get('nombre');
+        
+            const tienda = JSON.parse(fs.readFileSync('tienda.json', 'utf8'));
+            const producto = tienda.productos.find(p => p.nombre === nombreProd);
+        
+            if (!producto) {
+                res.writeHead(404, { 'Content-Type': 'text/html' });
+                res.end('<h1>Producto no encontrado</h1>');
+                return;
+            }
+        
+            let html = fs.readFileSync(ROOT_DIR + 'producto.html', 'utf8');
+            html = html.replace(/<!--NOMBRE-->/g, producto.nombre)
+                       .replace('<!--DESCRIPCION-->', producto.descripcion)
+                       .replace('<!--PRECIO-->', producto.precio)
+                       .replace('<!--STOCK-->', producto.stock)
+                       .replace('<!--IMAGEN-->', producto.imagen);
+        
+            const user = get_user(req);
+        
+            if (user) {
+                html = html.replace('<!--CARRITO-->',
+                  `<form method="POST" action="/add">
+                    <input type="hidden" name="producto" value="${producto.nombre}">
+                    <button type="submit" class="btn">Añadir al carrito</button>
+                  </form>`);
+            } else {
+                html = html.replace('<!--CARRITO-->',
+                  `<p><em>Debes iniciar sesión para comprar</em></p>`);
+            }
+        
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end(html);
+            return;
+        }
+        
         if (err) {
             statusCode = 404;
             res.setHeader('Content-Type', 'text/html');
