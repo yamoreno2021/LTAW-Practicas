@@ -1,11 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title><!--NOMBRE--></title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><!--NOMBRE--></title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="icon" href="/img/Mario.ico" type="image/x-icon">
 </head>
 <body>
+  <div class="home-button">
+    <a href="/">
+      <img src="img/icons/home2.svg" alt="Inicio">
+    </a>
+  </div>
+  <div class="usuario-box">
+    <a href="/carrito.html">
+        <img src="img/icons/carrito.svg" alt="Carrito" style="height: 32px;">
+      </a>
+      <!-- Este mensaje se rellena desde el servidor si hay cookie -->
+    <span style="color:#E60012; margin-left:10px;" id="1"><!--CAR--></span>
+
+    <a href="/login.html">
+      <img src="img/icons/user2.svg" alt="Login" style="height: 32px;">
+    </a>
+    <!-- Este mensaje se rellena desde el servidor si hay cookie -->
+    <span style="color:#E60012; margin-left:10px;" id="1"><!--USER--></span>
+  </div>
+
   <h1><!--NOMBRE--></h1>
   <img src="img/<!--IMAGEN-->" alt="<!--NOMBRE-->">
   <p><!--DESCRIPCION--></p>
@@ -13,6 +34,33 @@
   <p><strong>Stock:</strong> <!--STOCK--></p>
 
   <!--CARRITO-->
-  <a href="index.html" class="btn">Volver a la tienda</a>
+  
+
+  <footer>
+    <div class="footer-left">
+      <span>© 2025 Nintendo</span>
+      <a href="#">Términos y condiciones</a>
+      <a href="#">Privacidad y cookies</a>
+      <a href="#">Información de la empresa</a>
+      <a href="#">Configuración de las cookies</a>
+    </div>
+    <div class="footer-right">
+      <div class="metodos-pago">
+        <span>Paga de forma segura con</span>
+        <img src="img/icons/visa.svg" alt="Visa">
+        <img src="img/icons/mastercard.svg" alt="Mastercard">
+        <img src="img/icons/apple-pay.svg" alt="Apple Pay">
+        <img src="img/icons/paypal.svg" alt="PayPal">
+        <img src="img/icons/google-pay.svg" alt="Google Pay">
+      </div>
+      <div class="redes-sociales">
+        <img src="img/icons/instagram.svg" alt="Instagram">
+        <img src="img/icons/facebook.svg" alt="Facebook">
+        <img src="img/icons/x.svg" alt="X">
+        <img src="img/icons/youtube.svg" alt="YouTube">
+        <img src="img/icons/twitch.svg" alt="Twitch">
+      </div>
+    </div>
+</footer>      
 </body>
 </html>

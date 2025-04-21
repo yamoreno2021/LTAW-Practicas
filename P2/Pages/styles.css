@@ -97,6 +97,26 @@ header {
     border-radius: 10px;
 }
 
+.producto.mini {
+    width: 180px;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.producto.mini img {
+    width: 100%;
+    border-radius: 5px;
+}
+
+.btn.btn-mini {
+    font-size: 12px;
+    padding: 5px 10px;
+    margin-top: 8px;
+    border-radius: 20px;
+}
+
 .descripcion {
     position: relative;
     bottom: 0;
@@ -124,8 +144,10 @@ header {
 
 .btn {
     display: inline-block;
-    background: #e60012;
-    color: white;
+    background: white;
+    color: #e60012;
+    border-color:#e60012;
+    border: 2px solid;
     padding: 10px 15px;
     text-decoration: none;
     border-radius: 30px;
@@ -133,6 +155,18 @@ header {
     margin-top: 10px;
     transition: background 0.3s ease, transform 0.2s ease;
     animation: fadeIn 1.2s ease-in-out;
+}
+
+.home-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+}
+
+.home-button img {
+    height: 32px;
+    transition: transform 0.3s ease;
 }
 
 .error-btn {
@@ -152,8 +186,13 @@ header {
     animation: fadeIn 1.2s ease-in-out;
 }
 .btn:hover {
-    background: #b5000f;
+    background: white;
     transform: scale(1.1);
+}
+
+.home-button img:hover {
+    transform: scale(1.1);
+    cursor: pointer;
 }
 
 .error-btn:hover {

@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
+    <title>Finalizar compra</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="/img/Mario.ico" type="image/x-icon">
 </head>
 <body>
     <header>
-        <h1>Crear cuenta nueva</h1>
+        <h1>Finalizar compra</h1>
     </header>
 
     <main>
@@ -18,12 +18,29 @@
                 <img src="img/icons/home.svg" alt="Inicio">
             </a>
         </div>
+        <div class="usuario-box">
+            <a href="/carrito.html">
+                <img src="img/icons/carrito2.svg" alt="Carrito" style="height: 32px;">
+              </a>
+              <!-- Este mensaje se rellena desde el servidor si hay cookie -->
+            <span style="color:#E60012; margin-left:10px;" id="1"><!--CAR--></span>
+
+            <a href="/login.html">
+              <img src="img/icons/user.svg" alt="Login" style="height: 32px;">
+            </a>
+            <!-- Este mensaje se rellena desde el servidor si hay cookie -->
+            <span style="color:#E60012; margin-left:10px;" id="1"><!--USER--></span>
+
+        </div>
         
-        <form method="POST" action="/register">
-            <input type="text" name="nombre" placeholder="Nombre de usuario" required><br>
-            <input type="text" name="nombreReal" placeholder="Nombre real" required><br>
-            <input type="email" name="correo" placeholder="Correo electrónico" required><br>
-            <button type="submit">Registrarse</button>
+        <form method="POST" action="/finalizar">
+            <label>Dirección de envío:</label><br>
+            <input type="text" name="direccion" required><br><br>
+
+            <label>Número de tarjeta:</label><br>
+            <input type="text" name="tarjeta" required><br><br>
+
+            <button type="submit" class="btn">Confirmar pedido</button>
         </form>
     </main>
     <footer>

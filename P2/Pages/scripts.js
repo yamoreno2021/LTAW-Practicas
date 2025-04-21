@@ -1,25 +1,34 @@
-// document.getElementById("searchInput").addEventListener("input", function() {
-//     const input = this.value.toLowerCase();
-//     const productos = document.querySelectorAll(".producto");
-    
-//     productos.forEach(producto => {
-//         const nombre = producto.getAttribute("data-name");
-//         if (nombre.includes(input)) {
-//             producto.style.display = "block";
-//         } else {
-//             producto.style.display = "none";
-//         }
-//     });
-// });
 document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("searchInput");
-    searchInput.addEventListener("input", function () {
-        const input = searchInput.value.toLowerCase().trim();
-        const productos = document.querySelectorAll(".producto");
-        
-        productos.forEach(producto => {
-            const nombre = (producto.getAttribute("data-name") || "").toLowerCase().trim();
-            producto.classList.toggle("hidden", !nombre.replace(/\s+/g, "").includes(input.replace(/\s+/g, "")));
-        });
+    const contenedor = document.getElementById("productos-container");
+  
+    searchInput.addEventListener("input", () => {
+      const valor = searchInput.value;
+  
+      if (valor.length >= 1) {
+        const ajax = new XMLHttpRequest();
+        ajax.onreadystatechange = () => {
+          if (ajax.readyState === 4 && ajax.status === 200) {
+            const productos = JSON.parse(ajax.responseText);
+            contenedor.innerHTML = '';
+  
+            for (let prod of productos) {
+              contenedor.innerHTML += `
+                <div class="producto mini">
+                  <img src="img/${prod.imagen}" alt="${prod.nombre}">
+                  <h2>${prod.nombre}</h2>
+                  <p>${prod.precio} €</p>
+                  <a href="producto.html?nombre=${encodeURIComponent(prod.nombre)}" class="btn btn-mini">Ver más</a>
+                </div>`;
+            }
+          }
+        };
+  
+        ajax.open("GET", "/buscar?nombre=" + encodeURIComponent(valor), true);
+        ajax.send();
+      } else {
+        contenedor.innerHTML = '';
+      }
     });
-});
+  });
+  

@@ -1,7 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 
-const PORT = 8005;
+const PORT = 8006;
 const ROOT_DIR = __dirname + '/Pages/';
 const IMG_DIR = ROOT_DIR +'img';
 
@@ -133,35 +133,6 @@ const server = http.createServer((req, res) => {
     }
     
 
-
-
-    //-- Acceso al recurso raiz
-    //if (url.pathname == '/') {
-
-    //--- Si la variable user está asignada
-    // if (user) {
-
-    //     //-- Añadir a la página el nombre del usuario
-    //     console.log("user: " + user);
-    //     content = index.replace("Iniciar Sesion", "<h2>Usuario: " + user + "</h2>");
-    //     //res.writeHead(200, { 'Content-Type': 'text/html' });
-    //     //res.write(content)
-    //     // res.end();
-    // } else {
-    //     //-- Mostrar el enlace a la página de login
-    //     // content = EJ6_HTML.replace("HTML_EXTRA", `<a href="login">[Login]</a>`);
-    // }
-
-    //     //-- Acceso a otro recurso: Se hace login
-    // if (url.pathname == '/login') {
-
-    //     //-- Asignar la cookie de usuario Chuck
-    //     res.setHeader('Set-Cookie', "user=Chuck");
-
-    //     //-- Asignar la página web de login ok
-    //     content = index;
-    // }
-
     if (req.method === 'POST' && url.pathname === '/login') {
         let body = '';
         req.on('data', chunk => body += chunk);
@@ -260,12 +231,100 @@ const server = http.createServer((req, res) => {
           
             res.writeHead(302, {
                 'Set-Cookie': `carrito=${encodeURIComponent(nuevoValor)}; Path=/`,
-                'Location': '/carrito.html'
+                'Location': '/index.html'
             });
             res.end();
         });
         return;
     }
+
+    if (req.method === 'POST' && url.pathname === '/finalizar') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+            const params = new URLSearchParams(body);
+            const direccion = params.get('direccion');
+            const tarjeta = params.get('tarjeta');
+      
+            const user = get_user(req);
+            if (!user) {
+                res.writeHead(302, { Location: '/login.html' });
+                res.end();
+                return;
+            }
+      
+            // Leer productos del carrito
+            const cookie = req.headers.cookie || '';
+            let carritoRaw = '';
+            cookie.split(';').forEach(pair => {
+                const [k, v] = pair.trim().split('=');
+                if (k === 'carrito') carritoRaw = decodeURIComponent(v);
+            });
+      
+            const productos = {};
+            if (carritoRaw) {
+                carritoRaw.split('|').forEach(item => {
+                    const [nombre, cantidad] = item.split(':').map(s => s.trim());
+                    productos[nombre] = parseInt(cantidad) || 1;
+                });
+            }
+        
+            // Guardar en tienda.json
+            const tienda = JSON.parse(fs.readFileSync('tienda.json', 'utf8'));
+
+            // Verificar stock suficiente
+            let stockInsuficiente = [];
+
+            for (let nombre in productos) {
+                const cantidad = productos[nombre];
+                const prod = tienda.productos.find(p => p.nombre === nombre);
+                if (!prod || prod.stock < cantidad) {
+                    stockInsuficiente.push(`${nombre} (quedan ${prod ? prod.stock : 0})`);
+                }
+            }
+
+            // Si no hay stock suficiente, mostrar error
+            if (stockInsuficiente.length > 0) {
+                res.writeHead(200, { 'Content-Type': 'text/html' });
+                res.end(`
+                    <h1>Stock insuficiente</h1>
+                    <p>No hay suficientes unidades para:</p>
+                    <ul>${stockInsuficiente.map(item => `<li>${item}</li>`).join('')}</ul>
+                    <a href="/carrito.html">Volver al carrito</a>
+            `);
+            return;
+            }
+            
+            tienda.pedidos.push({
+                usuario: user,
+                direccion,
+                tarjeta,
+                productos
+            });
+
+            // Restar stock por cada producto comprado
+            for (let nombre in productos) {
+                const cantidadComprada = productos[nombre];
+                const prod = tienda.productos.find(p => p.nombre === nombre);
+                if (prod) {
+                    prod.stock -= cantidadComprada;
+                if (prod.stock < 0) prod.stock = 0;
+                }
+            }
+            
+            // Guardar cambios en tienda.json
+            fs.writeFileSync('tienda.json', JSON.stringify(tienda, null, 2));
+        
+            // Limpiar carrito
+            res.writeHead(200, {
+                'Set-Cookie': 'carrito=; Path=/; Max-Age=0',
+                'Content-Type': 'text/html'
+            });
+            res.end(`<h1>Pedido confirmado</h1><p>Gracias por tu compra, ${user}!</p><a href="/">Volver</a>`);
+            });
+            return;
+    }
+      
     
     if (url.pathname === '/carrito.html') {
         const cookie = req.headers.cookie || '';
@@ -305,6 +364,20 @@ const server = http.createServer((req, res) => {
         res.end(html);
         return;
 
+    }
+    
+    if (url.pathname === '/buscar') {
+        const params = new URLSearchParams(url.search);
+        const termino = (params.get('nombre') || '').toLowerCase();
+    
+        const tienda = JSON.parse(fs.readFileSync('tienda.json', 'utf8'));
+        const resultado = tienda.productos.filter(p =>
+            p.nombre.toLowerCase().includes(termino)
+        );
+    
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(resultado));
+        return;
     }
     
     
