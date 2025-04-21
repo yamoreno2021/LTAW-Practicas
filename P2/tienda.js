@@ -219,7 +219,94 @@ const server = http.createServer((req, res) => {
         });
         return;
       }
+    
+    if (req.method === 'POST' && url.pathname === '/add') {
+        let body = '';
+        req.on('data', chunk => body += chunk);
+        req.on('end', () => {
+            const params = new URLSearchParams(body);
+            const producto = params.get('producto');
+            
+            // Leer cookies
+            const cookie = req.headers.cookie || '';
+            let carrito = '';
+            cookie.split(';').forEach(pair => {
+                let [k, v] = pair.trim().split('=');
+                if (k === 'carrito') carrito = decodeURIComponent(v);
+            });
+    
+            // Convertir a objeto: { "Zelda": 1, "Mario": 2 }
+            let productos = {};
+            
+            if (carrito) {
+                carrito.split('|').forEach(item => {
+                    const [nombre, cantidad] = item.split(':');
+                    productos[nombre] = parseInt(cantidad);
+                });
+            }
+
+            // Añadir o incrementar
+            if (productos[producto]) {
+              productos[producto]++;
+            } else {
+                productos[producto] = 1;
+            }
+
+            //productos.push(producto);
+    
+            const nuevoValor = Object.entries(productos)
+            .map(([nombre, cantidad]) => `${nombre}:${cantidad}`)
+            .join('|');
+          
+            res.writeHead(302, {
+                'Set-Cookie': `carrito=${encodeURIComponent(nuevoValor)}; Path=/`,
+                'Location': '/carrito.html'
+            });
+            res.end();
+        });
+        return;
+    }
+    
+    if (url.pathname === '/carrito.html') {
+        const cookie = req.headers.cookie || '';
+        let carrito = '';
+        cookie.split(';').forEach(pair => {
+            let [k, v] = pair.trim().split('=');
+            if (k === 'carrito') carrito = decodeURIComponent(v);
+        });
+        
+        // Convertir carrito: { "Zelda": 1, "Mario": 2 }
+        //const productosNombres = carrito ? carrito.split('|') : [];
+        const productos = {};
+        if (carrito) {
+            carrito.split('|').forEach(item => {
+              const [nombre, cantidad] = item.split(':');
+              productos[nombre] = parseInt(cantidad);
+            });
+          }
+        
+        // Leer productos de tienda.json
+        const tienda = JSON.parse(fs.readFileSync('tienda.json'));
+        let listaHTML = '<ul>';
+        for (let nombre in productos) {
+            const p = tienda.productos.find(prod => prod.nombre === nombre);
+            if (p) {
+            const cantidad = productos[nombre];
+            const total = (p.precio * cantidad).toFixed(2);
+            listaHTML += `<li>${nombre} x${cantidad} - ${total} €</li>`;
+            }
+        }
+        listaHTML += '</ul>';
+        // Insertar en plantilla carrito.html
+        let html = fs.readFileSync(ROOT_DIR + 'carrito.html', 'utf8');
+        html = html.replace('<!--LISTA-->', listaHTML);
       
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end(html);
+        return;
+
+    }
+    
     
     fs.readFile(filePath, (err, content) => {
         if (url.pathname === '/' && filePath.endsWith('index.html')) {
