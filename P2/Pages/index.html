@@ -8,34 +8,38 @@
     <link rel="icon" href="/img/Mario.ico" type="image/x-icon">
 </head>
 <body> 
-    <header>
+    <header class="header-blanco">
+        <div class="home-button">
+          <a href="/">
+            <img src="img/icons/home.svg" alt="Inicio">
+          </a>
+        </div>
+      
+        <div class="usuario-box">
+          <div class="icono-bloque">
+            <a href="/carrito.html">
+              <img src="img/icons/carrito2.svg" alt="Carrito" style="height: 32px;">
+            </a>
+            <div class="carrito-info" style="color:#E60012"><!--CAR--></div>
+          </div>
+      
+          <div class="icono-bloque">
+            <a href="/login.html">
+              <img src="img/icons/user.svg" alt="Login" style="height: 32px;">
+            </a>
+            <div class="usuario-info" id="1" style="color:#E60012"><!--USER--></div>
+          </div>
+        </div>
+
         <h1>Nindendo</h1>
         <input type="text" id="searchInput" placeholder="Buscar producto...">
         <div class="productos" id="productos-container">
             <!-- Aquí se inyectan dinámicamente los productos -->
         </div>
-          
+
     </header>
     <main>
-        <div class="home-button">
-            <a href="/">
-              <img src="img/icons/home.svg" alt="Inicio">
-            </a>
-        </div>
-        <div class="usuario-box">
-            <a href="/carrito.html">
-                <img src="img/icons/carrito2.svg" alt="Carrito" style="height: 32px;">
-              </a>
-              <!-- Este mensaje se rellena desde el servidor si hay cookie -->
-            <span style="color:#E60012; margin-left:10px;" id="1"><!--CAR--></span>
 
-            <a href="/login.html">
-              <img src="img/icons/user.svg" alt="Login" style="height: 32px;">
-            </a>
-            <!-- Este mensaje se rellena desde el servidor si hay cookie -->
-            <span style="color:#E60012; margin-left:10px;" id="1"><!--USER--></span>
-
-        </div>
 
         <div class="productos">
             <div class="producto" data-name="Mariano Odiseas">

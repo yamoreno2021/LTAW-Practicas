@@ -1,7 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 
-const PORT = 8006;
+const PORT = 8007;
 const ROOT_DIR = __dirname + '/Pages/';
 const IMG_DIR = ROOT_DIR +'img';
 
@@ -78,7 +78,29 @@ function get_user(req) {
       return user || null;
     }
   }
-  
+
+function renderHTML(filePath, replacements = {}) {
+    let html = fs.readFileSync(filePath, 'utf8');
+    for (const key in replacements) {
+        html = html.replace(new RegExp(`<!--${key}-->`, 'g'), replacements[key]);
+    }
+    return html;
+}
+
+function getCarritoCount(req) {
+    const cookie = req.headers.cookie || '';
+    const match = cookie.match(/carrito=([^;]+)/);
+    if (!match) return '';
+
+    const carrito = decodeURIComponent(match[1]);
+    const total = carrito.split('|').reduce((sum, item) => {
+        const [, cant] = item.split(':');
+        return sum + (parseInt(cant) || 0);
+    }, 0);
+
+    return `${total} producto${total !== 1 ? 's' : ''}`;
+}
+
 const server = http.createServer((req, res) => {
     // console.log("Petición recibida!");
 
@@ -356,9 +378,15 @@ const server = http.createServer((req, res) => {
             }
         }
         listaHTML += '</ul>';
-        // Insertar en plantilla carrito.html
-        let html = fs.readFileSync(ROOT_DIR + 'carrito.html', 'utf8');
-        html = html.replace('<!--LISTA-->', listaHTML);
+
+
+        const user = get_user(req);
+
+        let html = renderHTML(ROOT_DIR + 'carrito.html', {
+            USER: user ?? '',
+            CAR: getCarritoCount(req),
+            LISTA: listaHTML
+        });
       
         res.writeHead(200, { 'Content-Type': 'text/html' });
         res.end(html);
@@ -380,17 +408,16 @@ const server = http.createServer((req, res) => {
         return;
     }
     
-    
     fs.readFile(filePath, (err, content) => {
-        if (url.pathname === '/' && filePath.endsWith('index.html')) {
-            let page = fs.readFileSync(filePath, 'utf8');
-            if (user) {
-                page = page.replace('<!--USER-->', `${user}`);
-            }
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.end(page);
-            return;
-        }
+        // if (url.pathname === '/' && filePath.endsWith('index.html')) {
+        //     let page = fs.readFileSync(filePath, 'utf8');
+        //     if (user) {
+        //         page = page.replace('<!--USER-->', `${user}`);
+        //     }
+        //     res.writeHead(200, { 'Content-Type': 'text/html' });
+        //     res.end(page);
+        //     return;
+        // }
 
         if (url.pathname === '/producto.html') {
             const params = new URLSearchParams(url.search);
@@ -405,15 +432,24 @@ const server = http.createServer((req, res) => {
                 return;
             }
         
-            let html = fs.readFileSync(ROOT_DIR + 'producto.html', 'utf8');
-            html = html.replace(/<!--NOMBRE-->/g, producto.nombre)
-                       .replace('<!--DESCRIPCION-->', producto.descripcion)
-                       .replace('<!--PRECIO-->', producto.precio)
-                       .replace('<!--STOCK-->', producto.stock)
-                       .replace('<!--IMAGEN-->', producto.imagen);
-        
+            // let html = fs.readFileSync(ROOT_DIR + 'producto.html', 'utf8');
+            // html = html.replace(/<!--NOMBRE-->/g, producto.nombre)
+            //            .replace('<!--DESCRIPCION-->', producto.descripcion)
+            //            .replace('<!--PRECIO-->', producto.precio)
+            //            .replace('<!--STOCK-->', producto.stock)
+            //            .replace('<!--IMAGEN-->', producto.imagen);
+            
             const user = get_user(req);
-        
+            let html = renderHTML(ROOT_DIR + 'producto.html', {
+                NOMBRE: producto.nombre,
+                DESCRIPCION: producto.descripcion,
+                PRECIO: producto.precio,
+                STOCK: producto.stock,
+                IMAGEN: producto.imagen,
+                USER: user ?? '',
+                CAR: getCarritoCount(req)
+            });
+
             if (user) {
                 html = html.replace('<!--CARRITO-->',
                   `<form method="POST" action="/add">
@@ -429,7 +465,12 @@ const server = http.createServer((req, res) => {
             res.end(html);
             return;
         }
-        
+            // Si es HTML, insertamos el usuario si existe
+            if (filePath.endsWith('.html') && user) {
+                let page = fs.readFileSync(filePath, 'utf8');
+                content = page.replace('<!--USER-->', user);
+            }
+
         if (err) {
             statusCode = 404;
             res.setHeader('Content-Type', 'text/html');
@@ -458,8 +499,18 @@ const server = http.createServer((req, res) => {
             res.setHeader('Cache-Control', 'max-age=3600');
 
             print_info_res(req, res, code);
+
+
+            if (filePath.endsWith('.html')) {
+                const user = get_user(req);
+                content = renderHTML(filePath, {
+                    USER: user ?? '',
+                    CAR: getCarritoCount(req)
+                });
+            }
             res.end(content);
 
+              
         }
 
     });
