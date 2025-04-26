@@ -8,7 +8,7 @@
     <link rel="icon" href="/img/Mario.ico" type="image/x-icon">
 </head>
 <body>
-    <header class="header-rojo">
+    <header class="header-blanco">
           <div class="home-button">
             <a href="/">
                 <img src="img/icons/home2.svg" alt="Inicio">
@@ -25,10 +25,14 @@
         </div>
         
         <form method="POST" action="/register">
-            <input type="text" name="nombre" placeholder="Nombre de usuario" required><br>
-            <input type="text" name="nombreReal" placeholder="Nombre real" required><br>
-            <input type="email" name="correo" placeholder="Correo electrónico" required><br>
-            <button type="submit">Registrarse</button>
+            <div style="color: white; font-size: 24px;"><!--ERROR--></div><br> 
+
+            <input type="text" class="Input" name="nombre" placeholder="Nombre de usuario" required><br>
+            <input type="text" class="Input" name="nombreReal" placeholder="Nombre real" required><br>
+            <input type="email" class="Input" name="correo" placeholder="Correo electrónico" required><br>
+            <input type="password" class="Input" name="password" placeholder="Contraseña" required><br>
+            <input type="password" class="Input" name="confirmar" placeholder="Confirmar contraseña" required><br>
+            <button type="submit" class="btn-blanco">Registrarse</button>
         </form>
     </main>
     <footer>
