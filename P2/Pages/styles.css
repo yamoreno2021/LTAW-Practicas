@@ -178,7 +178,7 @@ ul {
   }
    
 
-.error-img {
+.error-img, .gracias-imagen {
     width: 70%; /* Reduce el tamaño de la imagen de error */
     max-width: 500px; /* Tamaño máximo para evitar que crezca demasiado */
     height: auto;
@@ -225,7 +225,7 @@ ul {
     transition: transform 0.3s ease;
 }
 
-.error-btn {
+.error-btn, .btn-gracias {
     display: inline-block;
     /* background: white; */
     background: #e60012;
@@ -243,6 +243,10 @@ ul {
 }
 .btn:hover {
     background: white;
+    transform: scale(1.1);
+}
+.btn-blanco:hover {
+    background: #e60012;
     transform: scale(1.1);
 }
 

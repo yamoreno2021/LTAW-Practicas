@@ -3,12 +3,14 @@
     {
       "nombre": "root",
       "nombreReal": "Administrador",
-      "correo": "root@tienda.com"
+      "correo": "root@tienda.com",
+      "password": "1234"
     },
     {
       "nombre": "yuriy",
       "nombreReal": "Yuriy Moreno",
-      "correo": "yuriymosa@gmail.com"
+      "correo": "yuriymosa@gmail.com",
+      "password": "1234"
     }
   ],
   "productos": [
@@ -23,14 +25,14 @@
       "nombre": "Link Aliento Salvaje",
       "descripcion": "<p>Después de la mayor borrachera de la historia, Link despierta 100 años después y descubre que su reino ha sido arrasado, como siempre les sucede a todos los Link de la historia. Armado con una piedra mágica tipo iPhone, escala montañas, cocina cosas raras a las que llama comida y combate con palos de madera mientras todo intenta matarlo.</p><p>La princesa espera y tú... cazas insectos y haces snowboard en escudos. Prioridades, ¿no?</p>",
       "precio": 54.95,
-      "stock": 2,
+      "stock": 1,
       "imagen": "Zelda.webp"
     },
     {
       "nombre": "Cronicas de la Espada Xeno 3",
       "descripcion": "<p>Bienvenido al anime interactivo más dramático del año. Combates por turnos que no son por turnos, espadas del tamaño de edificios, y personajes que lloran más que en una telenovela turca. Todo ello aderezado con términos inventados como \"Interlink\" o \"Ouroboros\" que suenan profundos pero no entiendes ni tú ni el juego.</p><p>Un caos glorioso de historia, emociones, y música épica para salvar el mundo... otra vez.</p>",
       "precio": 54.95,
-      "stock": 3,
+      "stock": 2,
       "imagen": "Xenoblade.jpg"
     },
     {
@@ -51,7 +53,7 @@
       "nombre": "Otro Puto Mario",
       "descripcion": "<p>Otro Mario en 2D. ¿Cuántos van ya? Esta vez, las flores hablan y los niveles se deforman con cosas raras llamadas “Wonder Seeds”. También puedes convertirte en un elefante. No preguntes por qué. Sólo acéptalo.</p><p>Ideal para los fans de toda la vida, y también para los que se quejan de que “ya no hacen juegos como antes”, pero igual lo compran.</p>",
       "precio": 54.95,
-      "stock": 6,
+      "stock": 3,
       "imagen": "Wonder.jpg"
     },
     {
@@ -79,37 +81,10 @@
   "pedidos": [
     {
       "usuario": "yuriy",
-      "direccion": "Calle A",
-      "tarjeta": "1234 5678 9012 3456",
-      "productos": [
-        "Mariano Odiseas",
-        "Link Aliento Salvaje"
-      ]
-    },
-    {
-      "usuario": "yuriy",
       "direccion": "reyes",
-      "tarjeta": "1234",
-      "productos": [
-        "Rafa Nadal Aces",
-        "Otro Puto Mario",
-        "Mariano Odiseas"
-      ]
-    },
-    {
-      "usuario": "yuriy",
-      "direccion": "yyyy",
-      "tarjeta": "134234",
+      "tarjeta": "213213",
       "productos": {
-        "Mariano Odiseas": 2
-      }
-    },
-    {
-      "usuario": "yuriy",
-      "direccion": "yas",
-      "tarjeta": "231",
-      "productos": {
-        "Mariano Odiseas": 1
+        "Cronicas de la Espada Xeno 3": 1
       }
     }
   ]

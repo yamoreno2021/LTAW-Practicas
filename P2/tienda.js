@@ -409,18 +409,6 @@ const server = http.createServer((req, res) => {
                     stockInsuficiente.push(`${nombre} (quedan ${prod ? prod.stock : 0})`);
                 }
             }
-
-            // // Si no hay stock suficiente, mostrar error
-            // if (stockInsuficiente.length > 0) {
-            //     res.writeHead(200, { 'Content-Type': 'text/html' });
-            //     res.end(`
-            //         <h1>Stock insuficiente</h1>
-            //         <p>No hay suficientes unidades para:</p>
-            //         <ul>${stockInsuficiente.map(item => `<li>${item}</li>`).join('')}</ul>
-            //         <a href="/carrito.html">Volver al carrito</a>
-            // `);
-            // return;
-            // }
             
             tienda.pedidos.push({
                 usuario: user,
@@ -443,11 +431,11 @@ const server = http.createServer((req, res) => {
             fs.writeFileSync('tienda.json', JSON.stringify(tienda, null, 2));
         
             // Limpiar carrito
-            res.writeHead(200, {
+            res.writeHead(302, {
                 'Set-Cookie': 'carrito=; Path=/; Max-Age=0',
-                'Content-Type': 'text/html'
+                'Location': '/gracias.html'
             });
-            res.end(`<h1>Pedido confirmado</h1><p>Gracias por tu compra, ${user}!</p><a href="/">Volver</a>`);
+            res.end();
             });
             return;
     }
@@ -553,6 +541,18 @@ const server = http.createServer((req, res) => {
     }
     
     fs.readFile(filePath, (err, content) => {
+        const user = get_user(req);
+
+        if (err) {
+            statusCode = 404;
+            res.setHeader('Content-Type', 'text/html');
+            res.setHeader('X-Custom-Error', 'Archivo no encontrado');
+            res.writeHead(statusCode);
+            res.end(fs.readFileSync('Pages/error.html','utf8'));
+            print_info_res(req, res, 404);
+            return;
+        }
+
         if (url.pathname === '/producto.html') {
             const params = new URLSearchParams(url.search);
             const nombreProd = params.get('nombre');
@@ -566,7 +566,7 @@ const server = http.createServer((req, res) => {
                 return;
             }
         
-            const user = get_user(req);
+
             let html = renderHTML(ROOT_DIR + 'producto.html', {
                 NOMBRE: producto.nombre,
                 DESCRIPCION: producto.descripcion,
@@ -598,22 +598,13 @@ const server = http.createServer((req, res) => {
             res.end(html);
             return;
         }
-            // Si es HTML, insertamos el usuario si existe
-            if (filePath.endsWith('.html') && user) {
-                let page = fs.readFileSync(filePath, 'utf8');
-                content = page.replace('<!--USER-->', user);
-            }
 
-        if (err) {
-            statusCode = 404;
-            res.setHeader('Content-Type', 'text/html');
-            res.setHeader('X-Custom-Error', 'Archivo no encontrado');
-            res.writeHead(statusCode);
-            //res.writeHead(404, { 'Content-Type': 'text/html' });
-            res.end(fs.readFileSync('Pages/error.html','utf8'));
-            print_info_res(req, res, 404);
-            return;
-        }
+        // Si es HTML, insertamos el usuario si existe
+        // if (filePath.endsWith('.html') && user) {
+        //     let page = fs.readFileSync(filePath, 'utf8');
+        //     content = page.replace('<!--USER-->', user);
+        // }
+
         else{
             let contentType = 'text/html';
             if (filePath.endsWith('.css')) contentType = 'text/css';
@@ -635,7 +626,7 @@ const server = http.createServer((req, res) => {
 
 
             if (filePath.endsWith('.html')) {
-                const user = get_user(req);
+                //const user = get_user(req);
                 content = renderHTML(filePath, {
                     USER: user ?? '',
                     CAR: getCarritoCount(req)
