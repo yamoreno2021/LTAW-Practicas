@@ -1,0 +1,18 @@
+{
+  "name": "p3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "webChat.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "colors": "^1.4.0",
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1",
+    "websocket": "^1.0.35"
+  }
+}
