@@ -2,20 +2,35 @@ const display = document.getElementById("display");
 const msg_entry = document.getElementById("msg_entry");
 const socket = io();
 
-socket.on("message", ({ msg, from }) => {
-    const p = document.createElement("div");
-    p.classList.add("message");
+socket.on("message", ({ msg, from, username }) => {
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("message");
+
+    const name = document.createElement("div");
+    name.classList.add("name");
+
+    const text = document.createElement("div");
+    text.classList.add("text");
 
     if (from === 'system') {
-        p.classList.add("system");
-    } else if (from === socket.id) {
-        p.classList.add("me");
+        text.classList.add("system");
+        text.innerText = msg;
+        wrapper.appendChild(text);
     } else {
-        p.classList.add("other");
+        if (from === socket.id) {
+            text.classList.add("me");
+            name.classList.add("name", "me");
+        } else {
+            text.classList.add("other");
+            name.classList.add("name", "other");
+        }
+    name.textContent = username || from;
+    text.textContent = msg;
+    wrapper.appendChild(name);
+    wrapper.appendChild(text);
     }
 
-    p.innerText = msg;
-    display.appendChild(p);
+    display.appendChild(wrapper);
     display.scrollTop = display.scrollHeight;
 });
 

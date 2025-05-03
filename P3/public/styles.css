@@ -1,23 +1,24 @@
 body {
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: #e5ddd5;
+  background: #36393f;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+  color: #dcddde;
 }
 
 #chat-container {
-  background: #fff;
+  background: #2f3136;
   width: 90%;
   max-width: 600px;
   height: 90vh;
   display: flex;
   flex-direction: column;
-  border-radius: 10px;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
 
 #display {
@@ -26,39 +27,59 @@ body {
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  background: #ece5dd;
+  gap: 10px;
 }
 
 #msg_entry {
   border: none;
-  padding: 15px;
+  padding: 12px;
   font-size: 16px;
-  border-top: 1px solid #ccc;
+  border-top: 1px solid #202225;
   outline: none;
+  background: #40444b;
+  color: #dcddde;
 }
 
 .message {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 3px;
+  color: #7289da;
+}
+
+.name.me {
+  align-self: flex-end;
+  color: white;
+}
+
+.text {
   padding: 8px 12px;
-  border-radius: 7px;
-  max-width: 70%;
+  border-radius: 5px;
   word-wrap: break-word;
+  max-width: 50%;
 }
 
 .system {
   align-self: center;
-  background-color: #fff3cd;
-  color: #856404;
+  background-color: #fffae6;
+  color: #222;
   font-style: italic;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .me {
   align-self: flex-end;
-  background-color: #dcf8c6;
+  background-color: #3ba55d;
+  color: #fff;
 }
 
 .other {
   align-self: flex-start;
-  background-color: #fff;
+  background-color: #40444b;
+  color: #dcddde;
 }
