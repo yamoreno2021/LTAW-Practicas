@@ -83,3 +83,11 @@ body {
   background-color: #40444b;
   color: #dcddde;
 }
+
+#typing-indicator {
+  font-size: 13px;
+  font-style: italic;
+  color: #aaa;
+  padding: 4px 10px;
+  display: none;
+}

@@ -2,9 +2,46 @@ const display = document.getElementById("display");
 const msg_entry = document.getElementById("msg_entry");
 const socket = io();
 
+const typingIndicator = document.getElementById("typing-indicator");
+
+msg_entry.addEventListener("input", () => {
+    if (msg_entry.value.trim() !== "") {
+        socket.emit("typing");
+    } else {
+        socket.emit("stop_typing");
+    }
+});
+
+socket.on("typing_users", (users) => {
+    const currentUsername = document.getElementById("username-display")?.textContent;
+    const filtered = users.filter(name => name !== currentUsername);
+    if (filtered.length === 0) {
+        typingIndicator.textContent = '';
+        typingIndicator.style.display = 'none';
+    } else if (filtered.length === 1) {
+        typingIndicator.textContent = `${filtered[0]} está escribiendo...`;
+        typingIndicator.style.display = 'block';
+    } else if (filtered.length === 2){
+        typingIndicator.textContent = `${filtered.join(' y ')} están escribiendo...`;
+        typingIndicator.style.display = 'block';
+    } else{
+        typingIndicator.textContent = `Varias personas están escribiendo...`;
+        typingIndicator.style.display = 'block';
+    }
+});
+
+socket.on("nickname_updated", (newNick) => {
+    document.getElementById("username-display").textContent = newNick;
+});
+
 socket.on("message", ({ msg, from, username }) => {
     const wrapper = document.createElement("div");
     wrapper.classList.add("message");
+
+    // Mostrar el nombre de usuario asignado por el servidor
+    if (msg.includes("Bienvenido al chat")) {
+        document.getElementById("username-display").textContent = username || from;
+    }
 
     const name = document.createElement("div");
     name.classList.add("name");

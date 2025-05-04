@@ -9,6 +9,7 @@ const server = http.Server(app);
 const io = new socketServer(server);
 
 const connectedUsers = new Map();
+const typingUsers = new Set();
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/client.html');
@@ -19,8 +20,18 @@ app.use(express.static('public'));
 io.on('connect', (socket) => {
     const defaultUsername = `Usuario-${socket.id.slice(0, 4)}`;
     connectedUsers.set(socket.id, defaultUsername);
-    socket.emit('message', { msg: '[Servidor] Bienvenido al chat!', from: 'system', username: null });
+    socket.emit('message', { msg: '[Servidor] Bienvenido al chat!', from: 'system', username: connectedUsers.get(socket.id) });
     socket.broadcast.emit('message', { msg: `[Servidor] ${connectedUsers.get(socket.id)} se ha conectado.`, from: 'system', username: null });
+
+    socket.on('typing', () => {
+        typingUsers.add(connectedUsers.get(socket.id));
+        io.emit('typing_users', Array.from(typingUsers));
+    });
+    
+    socket.on('stop_typing', () => {
+        typingUsers.delete(connectedUsers.get(socket.id));
+        io.emit('typing_users', Array.from(typingUsers));
+    });
 
     socket.on('message', (raw) => {
         if (raw.startsWith('/')) {
@@ -34,6 +45,7 @@ io.on('connect', (socket) => {
     socket.on('disconnect', () => {
         const username = connectedUsers.get(socket.id) || 'Un usuario';
         connectedUsers.delete(socket.id);
+        typingUsers.delete(username);
         io.emit('message', { msg: `[Servidor] ${username} se ha desconectado.`, from: 'system', username: null });
     });
 });
@@ -58,6 +70,7 @@ function handleCommand(socket, msg) {
         const oldNick = connectedUsers.get(socket.id);
         connectedUsers.set(socket.id, newNick);
         io.emit('message', { msg: `[Servidor] ${oldNick} ahora es ${newNick}`, from: 'system', username: null });
+        socket.emit('nickname_updated', newNick);
         return;
     }
 
