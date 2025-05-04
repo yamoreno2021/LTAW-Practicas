@@ -20,6 +20,7 @@ app.use(express.static('public'));
 io.on('connect', (socket) => {
     const defaultUsername = `Usuario-${socket.id.slice(0, 4)}`;
     connectedUsers.set(socket.id, defaultUsername);
+    emitUserList();
     socket.emit('message', { msg: '[Servidor] Bienvenido al chat!', from: 'system', username: connectedUsers.get(socket.id) });
     socket.broadcast.emit('message', { msg: `[Servidor] ${connectedUsers.get(socket.id)} se ha conectado.`, from: 'system', username: null });
 
@@ -46,6 +47,7 @@ io.on('connect', (socket) => {
         const username = connectedUsers.get(socket.id) || 'Un usuario';
         connectedUsers.delete(socket.id);
         typingUsers.delete(username);
+        emitUserList();
         io.emit('message', { msg: `[Servidor] ${username} se ha desconectado.`, from: 'system', username: null });
     });
 });
@@ -71,6 +73,7 @@ function handleCommand(socket, msg) {
         connectedUsers.set(socket.id, newNick);
         io.emit('message', { msg: `[Servidor] ${oldNick} ahora es ${newNick}`, from: 'system', username: null });
         socket.emit('nickname_updated', newNick);
+        emitUserList();
         return;
     }
 
@@ -94,6 +97,9 @@ function handleCommand(socket, msg) {
     socket.emit('message', { msg: response, from: 'system', username: null });
 }
 
+function emitUserList() {
+    io.emit('user_list', Array.from(connectedUsers.values()));
+}
 server.listen(PUERTO);
 console.log("Escuchando en puerto: " + PUERTO);
 

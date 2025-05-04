@@ -9,6 +9,34 @@ body {
   color: #dcddde;
 }
 
+#layout {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+#user-list {
+  width: 200px;
+  background-color: #202225;
+  padding: 10px;
+  font-size: 14px;
+  color: #ccc;
+  border-right: 1px solid #1e1e1e;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.user-block {
+  background-color: #2f3136;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-weight: 500;
+  color: #dcddde;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
 #chat-container {
   background: #2f3136;
   width: 90%;
@@ -20,6 +48,7 @@ body {
   overflow: hidden;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
 }
+
 
 #display {
   flex: 1;

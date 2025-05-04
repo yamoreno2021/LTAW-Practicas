@@ -4,6 +4,9 @@ const socket = io();
 
 const typingIndicator = document.getElementById("typing-indicator");
 
+const userListDiv = document.getElementById("user-list");
+
+
 msg_entry.addEventListener("input", () => {
     if (msg_entry.value.trim() !== "") {
         socket.emit("typing");
@@ -28,6 +31,18 @@ socket.on("typing_users", (users) => {
         typingIndicator.textContent = `Varias personas están escribiendo...`;
         typingIndicator.style.display = 'block';
     }
+});
+
+socket.on("user_list", (users) => {
+    const userList = document.getElementById("user-list");
+    userList.innerHTML = "";
+
+    users.forEach((name) => {
+        const block = document.createElement("div");
+        block.classList.add("user-block");
+        block.textContent = name;
+        userList.appendChild(block);
+    });
 });
 
 socket.on("nickname_updated", (newNick) => {
