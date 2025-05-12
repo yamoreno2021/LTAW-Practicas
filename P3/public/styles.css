@@ -120,3 +120,8 @@ body {
   padding: 4px 10px;
   display: none;
 }
+
+.user-block.active {
+  background-color: #5865f2;
+  color: white;
+}

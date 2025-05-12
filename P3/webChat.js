@@ -20,15 +20,18 @@ app.use(express.static('public'));
 io.on('connect', (socket) => {
     const defaultUsername = `Usuario-${socket.id.slice(0, 4)}`;
     connectedUsers.set(socket.id, defaultUsername);
-    emitUserList();
-    socket.emit('message', { msg: '[Servidor] Bienvenido al chat!', from: 'system', username: connectedUsers.get(socket.id) });
-    socket.broadcast.emit('message', { msg: `[Servidor] ${connectedUsers.get(socket.id)} se ha conectado.`, from: 'system', username: null });
+
+    //socket.emit('nickname_updated', defaultUsername); // Primero enviamos el nombre
+
+    socket.emit('message', { msg: '[Servidor] Bienvenido al chat!', from: 'system', username: defaultUsername });
+    socket.broadcast.emit('message', { msg: `[Servidor] ${defaultUsername} se ha conectado.`, from: 'system', username: null });
+    emitUserList() // Luego emitimos lista global
 
     socket.on('typing', () => {
         typingUsers.add(connectedUsers.get(socket.id));
         io.emit('typing_users', Array.from(typingUsers));
     });
-    
+
     socket.on('stop_typing', () => {
         typingUsers.delete(connectedUsers.get(socket.id));
         io.emit('typing_users', Array.from(typingUsers));
@@ -39,15 +42,41 @@ io.on('connect', (socket) => {
             handleCommand(socket, raw);
         } else {
             const username2 = connectedUsers.get(socket.id) || socket.id;
-            io.emit('message', { msg: raw, from: socket.id, username:username2 });
+            typingUsers.delete(username2);
+            io.emit('typing_users', Array.from(typingUsers));
+            io.emit('message', { msg: raw, from: socket.id, username: username2 });
         }
+    });
+
+    socket.on('private_message', ({ to, msg }) => {
+        const fromUser = connectedUsers.get(socket.id);
+        const targetSocket = [...connectedUsers.entries()].find(([id, name]) => name === to);
+
+        if (!targetSocket) {
+            socket.emit("message", { msg: `[Servidor] El usuario ${to} no está conectado.`, from: 'system', username: null });
+            return;
+        }
+
+        const [targetId] = targetSocket;
+
+        const payload = {
+            msg,
+            from: socket.id,
+            username: fromUser,
+            to,
+        };
+
+        typingUsers.delete(fromUser);
+        io.emit('typing_users', Array.from(typingUsers));
+        socket.emit("message", payload);
+        io.to(targetId).emit("message", payload);
     });
 
     socket.on('disconnect', () => {
         const username = connectedUsers.get(socket.id) || 'Un usuario';
         connectedUsers.delete(socket.id);
         typingUsers.delete(username);
-        emitUserList();
+        emitUserList()
         io.emit('message', { msg: `[Servidor] ${username} se ha desconectado.`, from: 'system', username: null });
     });
 });
@@ -70,26 +99,28 @@ function handleCommand(socket, msg) {
         }
 
         const oldNick = connectedUsers.get(socket.id);
-        connectedUsers.set(socket.id, newNick);
+        typingUsers.delete(oldNick);
+    connectedUsers.set(socket.id, newNick);
+    io.emit('typing_users', Array.from(typingUsers));
         io.emit('message', { msg: `[Servidor] ${oldNick} ahora es ${newNick}`, from: 'system', username: null });
         socket.emit('nickname_updated', newNick);
-        emitUserList();
+        emitUserList()
         return;
     }
 
     switch (command) {
         case '/help':
             response = '[Comandos disponibles] /help, /list, /hello, /date, /nick';
-        break;
+            break;
         case '/list':
             response = `[Servidor] Usuarios conectados: ${connectedUsers.size}`;
-        break;
+            break;
         case '/hello':
             response = '[Servidor] ¡Hola! ¿Cómo estás?';
-        break;
+            break;
         case '/date':
             response = `[Servidor] Fecha actual: ${new Date().toLocaleString()}`;
-        break;
+            break;
         default:
             response = '[Servidor] Comando no reconocido. Usa /help para ver los comandos disponibles.';
     }
@@ -100,6 +131,7 @@ function handleCommand(socket, msg) {
 function emitUserList() {
     io.emit('user_list', Array.from(connectedUsers.values()));
 }
+
 server.listen(PUERTO);
 console.log("Escuchando en puerto: " + PUERTO);
 
