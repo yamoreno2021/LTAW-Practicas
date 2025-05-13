@@ -3,7 +3,7 @@ const http = require('http');
 const express = require('express');
 const colors = require('colors');
 
-const PUERTO = 8080;
+const PUERTO = 8081;
 const app = express();
 const server = http.Server(app);
 const io = new socketServer(server);
@@ -21,12 +21,11 @@ io.on('connect', (socket) => {
     const defaultUsername = `Usuario-${socket.id.slice(0, 4)}`;
     connectedUsers.set(socket.id, defaultUsername);
 
-    //socket.emit('nickname_updated', defaultUsername); // Primero enviamos el nombre
-
     socket.emit('message', { msg: '[Servidor] Bienvenido al chat!', from: 'system', username: defaultUsername });
     socket.broadcast.emit('message', { msg: `[Servidor] ${defaultUsername} se ha conectado.`, from: 'system', username: null });
     emitUserList() // Luego emitimos lista global
 
+    
     socket.on('typing', () => {
         typingUsers.add(connectedUsers.get(socket.id));
         io.emit('typing_users', Array.from(typingUsers));
@@ -35,6 +34,13 @@ io.on('connect', (socket) => {
     socket.on('stop_typing', () => {
         typingUsers.delete(connectedUsers.get(socket.id));
         io.emit('typing_users', Array.from(typingUsers));
+    });
+
+    socket.on("ping_request", (sentTime) => {
+        // ✅ Siempre eliminar de "escribiendo"
+        typingUsers.delete(connectedUsers.get(socket.id));  // ✅ FIX typing bug
+        io.emit('typing_users', Array.from(typingUsers)); 
+        socket.emit("ping_response", sentTime);
     });
 
     socket.on('message', (raw) => {
@@ -49,27 +55,31 @@ io.on('connect', (socket) => {
     });
 
     socket.on('private_message', ({ to, msg }) => {
-        const fromUser = connectedUsers.get(socket.id);
-        const targetSocket = [...connectedUsers.entries()].find(([id, name]) => name === to);
+        if (msg.startsWith('/')) {
+            handleCommand(socket, msg);
+        } else {
+            const fromUser = connectedUsers.get(socket.id);
+            const targetSocket = [...connectedUsers.entries()].find(([id, name]) => name === to);
 
-        if (!targetSocket) {
-            socket.emit("message", { msg: `[Servidor] El usuario ${to} no está conectado.`, from: 'system', username: null });
-            return;
+            if (!targetSocket) {
+                socket.emit("message", { msg: `[Servidor] El usuario ${to} no está conectado.`, from: 'system', username: null });
+                return;
+            }
+
+            const [targetId] = targetSocket;
+
+            const payload = {
+                msg,
+                from: socket.id,
+                username: fromUser,
+                to,
+            };
+
+            typingUsers.delete(fromUser);
+            io.emit('typing_users', Array.from(typingUsers));
+            socket.emit("message", payload);
+            io.to(targetId).emit("message", payload);
         }
-
-        const [targetId] = targetSocket;
-
-        const payload = {
-            msg,
-            from: socket.id,
-            username: fromUser,
-            to,
-        };
-
-        typingUsers.delete(fromUser);
-        io.emit('typing_users', Array.from(typingUsers));
-        socket.emit("message", payload);
-        io.to(targetId).emit("message", payload);
     });
 
     socket.on('disconnect', () => {
@@ -79,9 +89,12 @@ io.on('connect', (socket) => {
         emitUserList()
         io.emit('message', { msg: `[Servidor] ${username} se ha desconectado.`, from: 'system', username: null });
     });
+
 });
 
 function handleCommand(socket, msg) {
+    typingUsers.delete(connectedUsers.get(socket.id));  // ✅ FIX typing bug
+    io.emit('typing_users', Array.from(typingUsers));   // ✅ Notify all clients
     const command = msg.trim();
     let response;
 
@@ -97,20 +110,28 @@ function handleCommand(socket, msg) {
             socket.emit('message', { msg: `[Servidor] El nombre "${newNick}" ya está en uso.`, from: 'system', username: null });
             return;
         }
-
         const oldNick = connectedUsers.get(socket.id);
         typingUsers.delete(oldNick);
-    connectedUsers.set(socket.id, newNick);
-    io.emit('typing_users', Array.from(typingUsers));
-        io.emit('message', { msg: `[Servidor] ${oldNick} ahora es ${newNick}`, from: 'system', username: null });
-        socket.emit('nickname_updated', newNick);
-        emitUserList()
-        return;
-    }
+
+        connectedUsers.set(socket.id, newNick);
+        io.emit('typing_users', Array.from(typingUsers));
+            io.emit('message', { msg: `[Servidor] ${oldNick} ahora es ${newNick}`, from: 'system', username: null });
+            socket.emit('nickname_updated', newNick);
+            emitUserList()
+            return;
+        }
 
     switch (command) {
         case '/help':
-            response = '[Comandos disponibles] /help, /list, /hello, /date, /nick';
+            response = `[Ayuda]
+            /help - Muestra esta ayuda
+            /list - Lista la cantidad de usuarios conectados
+            /hello - Saluda desde el servidor
+            /date - Muestra la fecha y hora actual
+            /nick <nuevo_nombre> - Cambia tu nombre de usuario
+            /ping - Mide la latencia con el servidor
+            /clear - Limpia la conversación del chat actual (solo en tu pantalla)`;
+            
             break;
         case '/list':
             response = `[Servidor] Usuarios conectados: ${connectedUsers.size}`;

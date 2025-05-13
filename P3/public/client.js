@@ -11,6 +11,9 @@ let currentChat = 'global';
 let username = null;
 const chats = { global: [] };
 
+const pendingPings = {};
+
+
 msg_entry.addEventListener("input", () => {
     socket.emit(msg_entry.value.trim() ? "typing" : "stop_typing");
 });
@@ -19,6 +22,20 @@ msg_entry.addEventListener("keypress", (e) => {
     if (e.key === "Enter" && msg_entry.value.trim()) {
         const msg = msg_entry.value.trim();
         msg_entry.value = "";
+        
+        if (msg === '/clear') {
+            chats[currentChat] = []; // 🔥 Solo borra el chat activo
+            addMessage(currentChat, { msg: "[Chat limpiado]", from: 'system', username: null });
+            renderMessages();
+            return;
+        }
+
+        if (msg === "/ping") {
+            const timestamp = Date.now();
+            pendingPings[timestamp] = true;
+            socket.emit("ping_request", timestamp);
+            return; // No procesar como mensaje normal
+        }
 
         if (!currentChat || currentChat === 'global') {
             socket.emit("message", msg);
@@ -93,9 +110,12 @@ socket.on("message", ({ msg, from, username: uname, to }) => {
     }
 
     const isPrivate = !!to && to !== 'global';
-    const key = isPrivate
-        ? (username === uname ? to : uname)
-        : 'global';
+    const key =
+        from === "system"
+            ? currentChat  // ✅ Mostrar respuestas del sistema en el chat que el usuario tiene abierto
+            : isPrivate
+                ? (username === uname ? to : uname)
+                : 'global';
 
     if (!chats[key]) chats[key] = [];
     chats[key].push({ msg, from, username: uname });
@@ -153,3 +173,15 @@ socket.on("typing_users", (users) => {
             : `Varias personas están escribiendo...`;
 });
 
+socket.on("ping_response", (sentTime) => {
+    if (pendingPings[sentTime]) {
+        const latency = Date.now() - sentTime;
+        addMessage(currentChat, {
+            msg: `[Ping] Latencia: ${latency} ms`,
+            from: "system",
+            username: null
+        });
+        renderMessages();
+        delete pendingPings[sentTime];
+    }
+});
