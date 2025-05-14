@@ -59,15 +59,39 @@ body {
   gap: 10px;
 }
 
+#input-area {
+  position: relative;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #202225;
+  background: #40444b;
+}
+
 #msg_entry {
-  border: none;
+  flex: 1;
   padding: 12px;
   font-size: 16px;
-  border-top: 1px solid #202225;
-  outline: none;
   background: #40444b;
   color: #dcddde;
+  border: none;
+  outline: none;
+  padding-right: 40px;
 }
+
+#send-btn {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+#send-btn img {
+  width: 24px;
+  height: 24px;
+  filter: brightness(0.9);
+}
+
 
 .message {
   display: flex;

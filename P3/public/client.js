@@ -45,6 +45,34 @@ msg_entry.addEventListener("keypress", (e) => {
     }
 });
 
+document.getElementById("send-btn").addEventListener("click", () => {
+    const msg = msg_entry.value.trim();
+    if (!msg) return;
+
+    msg_entry.value = "";
+
+    if (msg === '/clear') {
+        chats[currentChat] = [];
+        addMessage(currentChat, { msg: "[Chat limpiado]", from: 'system', username: null });
+        renderMessages();
+        return;
+    }
+
+    if (msg === "/ping") {
+        const timestamp = Date.now();
+        pendingPings[timestamp] = true;
+        socket.emit("ping_request", timestamp);
+        return;
+    }
+
+    if (!currentChat || currentChat === 'global') {
+        socket.emit("message", msg);
+    } else {
+        socket.emit("private_message", { to: currentChat, msg });
+    }
+});
+
+
 function addMessage(chatKey, message) {
     if (!chats[chatKey]) chats[chatKey] = [];
     chats[chatKey].push(message);
