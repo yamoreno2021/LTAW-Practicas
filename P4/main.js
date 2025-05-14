@@ -9,7 +9,7 @@ const http = require('http');
 const socketServer = require('socket.io').Server;
 const QRCode = require('qrcode');
 
-const PORT = 8081;
+const PORT = 8080;
 const chatApp = express();
 const server = http.createServer(chatApp);
 const io = new socketServer(server);

@@ -1,7 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 
-const PORT = 8007;
+const PORT = 8001;
 const ROOT_DIR = __dirname + '/Pages/';
 const IMG_DIR = ROOT_DIR +'img';
 

@@ -3,7 +3,7 @@ const http = require('http');
 const express = require('express');
 const colors = require('colors');
 
-const PUERTO = 8081;
+const PUERTO = 8080;
 const app = express();
 const server = http.Server(app);
 const io = new socketServer(server);
