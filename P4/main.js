@@ -142,7 +142,7 @@ io.on('connect', (socket) => {
             io.emit('typing_users', Array.from(typingUsers));
             socket.emit("message", payload);
             io.to(targetId).emit("message", payload);
-            if (win) win.webContents.send('message-log', `[Privado] ${fromUser} → ${to}: ${msg}`);
+            if (win) win.webContents.send('message-log', `[Privado] [${fromUser} → ${to}]: ${msg}`);
 
         }
   });

@@ -16,6 +16,7 @@ window.addEventListener('DOMContentLoaded', () => {
         elChrome.textContent = data.chrome;
         elElectron.textContent = data.electron;
         elURL.textContent = data.url;
+        console.log("QR recibido:", data.qr); // 👈 debug
         elQR.src = data.qr;
     });
 
