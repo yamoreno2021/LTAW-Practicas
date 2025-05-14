@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebChat</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="discord.ico" sizes="32x32" type="image/x-icon">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="client.js" defer></script>
+ 
+</head>
+<body>
+    <div id="layout">
+        <div id="user-list"></div>
+    
+        <div id="chat-container">
+            <div id="username-display" style="padding: 5px 10px; font-size: 14px; color: #999;"></div>
+            <div id="display"></div>
+            <div id="typing-indicator"></div>
+            <div id="input-area">
+            <input type="text" placeholder="Escribe un mensaje..." autocomplete="off" id="msg_entry">
+                <button id="send-btn">
+                    <img src="/send.png" alt="Enviar" />
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

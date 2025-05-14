@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Servidor Chat - GUI</title>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self';" />
+    <link rel="stylesheet" href="styleGUI.css">
+    <script src="index.js" defer></script>
+</head>
+<body>
+    <h1>Servidor WebChat (Electron)</h1>
+
+    <div id="info">
+        <p><strong>Node:</strong> <span id="ver_node"></span></p>
+        <p><strong>Chrome:</strong> <span id="ver_chrome"></span></p>
+        <p><strong>Electron:</strong> <span id="ver_electron"></span></p>
+        <p><strong>Usuarios conectados:</strong> <span id="user_count">0</span></p>
+        <p><strong>URL:</strong> <span id="ver_url"></span></p>
+        <p><strong>QR:</strong><br><img id="qr_img" width="120" /></p>
+    </div>
+
+    <button id="btn_test">Enviar mensaje de prueba</button>
+
+    <div id="messages"></div>
+
+</body>
+</html>
