@@ -1,5 +1,5 @@
 // main.js
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, shell } = require('electron');
 const os = require('os');
 const path = require('path');
 
@@ -9,7 +9,7 @@ const http = require('http');
 const socketServer = require('socket.io').Server;
 const QRCode = require('qrcode');
 
-const PORT = 8080;
+const PORT = 8081;
 const chatApp = express();
 const server = http.createServer(chatApp);
 const io = new socketServer(server);
@@ -31,20 +31,55 @@ function createWindow() {
     });
 
     win.loadFile('index.html');
-
     win.webContents.on('did-finish-load', async () => {
         const url = `http://${getLocalIP()}:${PORT}`;
-        const qrDataURL = await QRCode.toDataURL(url); // ✅ generar código base64
+        const qrDataURL = await QRCode.toDataURL(url);
+
+        const cpus = os.cpus();
+        const totalMemMB = Math.round(os.totalmem() / 1024 / 1024);
+        const freeMemMB = Math.round(os.freemem() / 1024 / 1024);
 
         win.webContents.send('init', {
             node: process.version,
             chrome: process.versions.chrome,
             electron: process.versions.electron,
+            platform: process.platform,
+            arch: process.arch,
+            cwd: process.cwd(),
             url,
-            qr: qrDataURL
+            qr: qrDataURL,
+            specs: {
+                cpu: cpus[0]?.model || 'Desconocido',
+                cores: cpus.length,
+                totalMemMB,
+                freeMemMB,
+            }
         });
     });
 }
+
+// win.webContents.on('did-finish-load', async () => {
+//     const url = `http://${getLocalIP()}:${PORT}`;
+//     const qrDataURL = await QRCode.toDataURL(url); // ✅ generar código base64
+
+//     win.webContents.send('init', {
+//         node: process.version,                  // Version node.js
+//         chrome: process.versions.chrome,        // Version chrome
+//         electron: process.versions.electron,    // Version electron
+//         cwd: process.cwd(),                     // Directorio actual
+//         url,
+//         qr: qrDataURL,
+
+//         platform: process.platform,             // Sistema operativo
+//         arch: process.arch,                     // Arquitectura CPU
+//         specs: {
+//             cpu: cpus[0]?.model || 'Desconocido',
+//             cores: cpus.length,
+//             totalMemMB,
+//             freeMemMB
+//         }
+//     });
+// });
 
 app.whenReady().then(() => {
     createWindow();
@@ -71,6 +106,11 @@ ipcMain.handle('test-message', () => {
         from: 'system',
         username: null,
     });
+});
+
+// Abrir navegador
+ipcMain.handle('open-browser', () => {
+    shell.openExternal(`http://${getLocalIP()}:${PORT}`);
 });
 
 // servir pagina estatica al cliente

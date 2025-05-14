@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Servidor Chat - GUI</title>
+    <title>Servidor WebChat - GUI</title>
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self';" /> -->
     <link rel="stylesheet" href="styleGUI.css">
     <script src="index.js" defer></script>
@@ -10,16 +10,28 @@
 <body>
     <h1>Servidor WebChat (Electron)</h1>
 
-    <div id="info">
-        <p><strong>Node:</strong> <span id="ver_node"></span></p>
-        <p><strong>Chrome:</strong> <span id="ver_chrome"></span></p>
-        <p><strong>Electron:</strong> <span id="ver_electron"></span></p>
-        <p><strong>Usuarios conectados:</strong> <span id="user_count">0</span></p>
-        <p><strong>URL:</strong> <span id="ver_url"></span></p>
-        <p><strong>QR:</strong><br><img id="qr_img" width="120" /></p>
+    <div class="container">
+        <div id="left">
+          <p><strong>Node:</strong> <span id="ver_node"></span></p>
+          <p><strong>Chrome:</strong> <span id="ver_chrome"></span></p>
+          <p><strong>Electron:</strong> <span id="ver_electron"></span></p>
+          <p><strong>Usuarios conectados:</strong> <span id="user_count">0</span></p>
+          <p><strong>Directorio:</strong> <span id="info_cwd"></span></p>
+          <p><strong>URL:</strong> <span id="ver_url"></span></p>
+          <p><strong>QR:</strong><br><img id="qr_img" width="120" /></p>
+          <button id="btn_test">Enviar mensaje de prueba</button>
+          <button id="btn_browser">Abrir en navegador</button>
+        </div>
+    
+        <div id="right">
+          <p><strong>Plataforma:</strong> <span id="spec_platform"></span></p>
+          <p><strong>Arquitectura:</strong> <span id="spec_arch"></span></p>
+          <p><strong>CPU:</strong> <span id="spec_cpu"></span></p>
+          <p><strong>Núcleos:</strong> <span id="spec_cores"></span></p>
+          <p><strong>RAM total:</strong> <span id="spec_total"></span> MB</p>
+          <p><strong>RAM libre:</strong> <span id="spec_free"></span> MB</p>
+        </div>
     </div>
-
-    <button id="btn_test">Enviar mensaje de prueba</button>
 
     <div id="messages"></div>
 
